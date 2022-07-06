@@ -58,16 +58,17 @@ const addCart = () => {
     let color = document.getElementById("colors");
     let quantity = document.getElementById("quantity");
     // let totalPrice = document.getElementById("price");
-    // console.log(color.value);
-    console.log(productArray);
+    console.log(quantity.value);
+    console.log(button);
     
-    // console.log(quantity.value);
 
     const fusionProductcolor = Object.assign({}, productData, {
       color: `${color.value}`,
       quantite: `${quantity.value}`,
       totalPrice: `${eval(quantity.value * productData.price)}`
     });
+
+
     if (color.value == "" || quantity.value == "0") {
       alert("Veuillez choisir un coloris et saisir une quantité");
     } else {
