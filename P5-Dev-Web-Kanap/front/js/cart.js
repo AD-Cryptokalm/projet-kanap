@@ -1,7 +1,6 @@
 let sommeProduct = [];
 
 let addProduct = JSON.parse(localStorage.getItem("product"));
-console.log(addProduct);
 
 const productCartDisplay = async () => {
   if (addProduct) {
@@ -49,7 +48,7 @@ productCartDisplay();
 
 const deleteProduct = async (productCartDisplay) => {
   await productCartDisplay;
-  console.log("treza");
+
   let corbeilles = document.querySelectorAll(".deleteItem");
   corbeilles.forEach((corbeille) => {
     corbeille.addEventListener("click", () => {
@@ -282,7 +281,6 @@ email.addEventListener("input", function (e) {
   ) {
     emailErrorMsg.innerHTML = "";
     valueEmail = e.target.value;
-    console.log(valueEmail);
   }
 
   if (
@@ -297,7 +295,6 @@ email.addEventListener("input", function (e) {
 
 const validationCart = document.addEventListener("submit", (e) => {
   e.preventDefault();
-  console.log("stop");
 
   if (
     addProduct &&
@@ -309,12 +306,11 @@ const validationCart = document.addEventListener("submit", (e) => {
   ) {
     const orderTotal = JSON.parse(localStorage.getItem("product"));
     let orderId = [];
-    console.log(orderTotal);
 
     orderTotal.forEach((order) => {
       orderId.push(order._id);
     });
-    console.log(orderId);
+
     const dataUser = {
       contact: {
         firstName: valueFirstName,
@@ -323,15 +319,41 @@ const validationCart = document.addEventListener("submit", (e) => {
         city: valueCity,
         email: valueEmail,
       },
-      
-      product: orderId,
 
+      products: orderId,
     };
-    localStorage.setItem("orderId", JSON.stringify(dataUser))
+    localStorage.setItem("order", JSON.stringify(dataUser));
     // dataUser = JSON.parse(localStorage.getItem("orderId"))
-    console.log(dataUser);
+    // console.log(dataUser);
 
-    alert("Commande validée");
+    // ------------------------envoi vers server-----------------
+
+    const promise1 = fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      body: JSON.stringify(dataUser),
+      headers: {
+        
+        "Content-Type": "application/json",
+      },
+    });
+    // ------------------------réponse du server-----------------
+    promise1.then(async (response) => {
+      try {
+        const content = await response.json();
+        console.log(content);
+        localStorage.setItem("orderId", JSON.stringify(content.orderId));
+      
+        window.location = "confirmation.html"
+      
+      } catch (e) {
+        console.log(e);
+      }
+    });
+   
+
+    // window.location = ("http://127.0.0.1:5500/P5-Dev-Web-Kanap/front/html/confirmation.html")
+
+    // alert("Commande validée");
   } else {
     alert("Aucune commande validée");
   }
