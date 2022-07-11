@@ -6,11 +6,10 @@ const fetchProducts = async () => {
     .then((res) => res.json())
     .then((promise) => {
       productsData = promise;
-      // console.log(productsData);
     });
 };
 
-// -------------------------Affichage produits----------------------
+// -------------------------Affichage des produits----------------------
 const productsDisplay = async () => {
   await fetchProducts();
 

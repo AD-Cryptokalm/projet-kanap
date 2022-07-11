@@ -1,7 +1,19 @@
-const orderId = JSON.parse(localStorage.getItem("orderId").split("-").join(''));
-console.log(orderId);
 
-const displayOrderId = document.getElementById("orderId");
+// -------------------------Récupération de l'id de la commande----------------------
 
-displayOrderId.textContent = `${orderId}`
+const finalOrder = window.location.search.split("?").join("");
+
+// -------------------------Affichage de l'id de la commande----------------------
+
+displayOrderId = document.getElementById(
+  "orderId"
+).textContent = `${finalOrder}`;
+
+// -------------------------Suppression des données dans le localstorage----------------------
+
+// const deleteLocalstorage = () => {
+//   localStorage.removeItem("product");
+//   
+// };
+
 

@@ -1,4 +1,4 @@
-let sommeProduct = [];
+// -------------------------Affichage des produits dans le panier----------------------
 
 let addProduct = JSON.parse(localStorage.getItem("product"));
 
@@ -44,7 +44,10 @@ const productCartDisplay = async () => {
 };
 productCartDisplay();
 
+
 // -------------------------Supprimer produit depuis panier----------------------
+let sommeProduct = [];
+
 
 const deleteProduct = async (productCartDisplay) => {
   await productCartDisplay;
@@ -52,7 +55,6 @@ const deleteProduct = async (productCartDisplay) => {
   let corbeilles = document.querySelectorAll(".deleteItem");
   corbeilles.forEach((corbeille) => {
     corbeille.addEventListener("click", () => {
-      console.log(corbeille);
       window.location.reload(true);
 
       let totalDeletes = addProduct.length;
@@ -72,11 +74,9 @@ const deleteProduct = async (productCartDisplay) => {
         console.log(sommeProduct);
         localStorage.setItem("product", JSON.stringify(sommeProduct));
         JSON.parse(localStorage.getItem("product"));
-        console.log("iudihks");
       }
     });
   });
-  // window.location.reload(true)
 };
 
 // -------------------------Ajout produit depuis panier----------------------
@@ -85,8 +85,8 @@ const newQuantite = async (productCartDisplay) => {
   await productCartDisplay;
 
   let modifQuantite = document.querySelectorAll("input.itemQuantity");
-  // console.log(modifQuantite);
   total();
+
   modifQuantite.forEach((plusMoins) => {
     plusMoins.addEventListener("click", () => {
       console.log(plusMoins);
@@ -116,7 +116,6 @@ const total = () => {
 
   productQuantity = [];
   productPrice = [];
-  // console.log(dataLocal);
 
   if (dataLocal) {
     dataLocal.forEach((product) => {
@@ -149,7 +148,7 @@ let valueAddress;
 let valueCity;
 let valueEmail;
 
-// ------------------------input firstname-----------------
+// ------------------------RegeExp input firstname-----------------
 
 firstName.addEventListener("input", function (e) {
   valueFirstName;
@@ -175,11 +174,12 @@ firstName.addEventListener("input", function (e) {
   ) {
     firstNameErrorMsg.innerHTML =
       "Veuillez ne pas saisir de caractères spéciaux, de chiffres ou accents";
+      firstNameErrorMsg.style.color = "red";
     valueFirstName = null;
   }
 });
 
-// ------------------------input lastname-----------------
+// ------------------------RegeExp input lastname-----------------
 
 lastName.addEventListener("input", function (e) {
   valueLastName;
@@ -205,11 +205,12 @@ lastName.addEventListener("input", function (e) {
   ) {
     lastNameErrorMsg.innerHTML =
       "Veuillez ne pas saisir de caractères spéciaux, de chiffres ou accents";
+      firstNameErrorMsg.style.color = "red";
     valueLastName = null;
   }
 });
 
-// ------------------------input address-----------------
+// ------------------------RegeExp input address-----------------
 
 address.addEventListener("input", function (e) {
   valueAddress;
@@ -239,7 +240,7 @@ address.addEventListener("input", function (e) {
   }
 });
 
-// ------------------------input city-----------------
+// ------------------------RegeExp input city-----------------
 
 city.addEventListener("input", function (e) {
   valueCity;
@@ -253,13 +254,13 @@ city.addEventListener("input", function (e) {
     valueCity = null;
   }
 
-  if (e.target.value.match(/^[a-z A-Z]{2,20}$/)) {
+  if (e.target.value.match(/^([a-z A-Z]{2,20})?([-])([a-z A-Z]{2,20})$/)) {
     cityErrorMsg.innerHTML = "";
     valueCity = e.target.value;
   }
 
   if (
-    !e.target.value.match(/^[a-z A-Z]{2,20}$/) &&
+    !e.target.value.match(/^([a-z A-Z]{2,20})?([-])([a-z A-Z]{2,20})$/) &&
     e.target.value.length > 2 &&
     e.target.value.length < 20
   ) {
@@ -269,7 +270,7 @@ city.addEventListener("input", function (e) {
   }
 });
 
-// ------------------------input email-----------------
+// ------------------------RegeExp input email-----------------
 
 email.addEventListener("input", function (e) {
   valueEmail;
@@ -277,14 +278,14 @@ email.addEventListener("input", function (e) {
     emailErrorMsg.innerHTML = "";
     valueEmail = null;
   } else if (
-    e.target.value.match(/^([\w-]+\.)+[\w-]+@([\w-]+\.)+[\w-]{2,4}$/)
+    e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/) 
   ) {
     emailErrorMsg.innerHTML = "";
     valueEmail = e.target.value;
   }
 
   if (
-    !e.target.value.match(/^([\w-]+\.)+[\w-]+@([\w-]+\.)+[\w-]{2,4}$/) &&
+    !e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/) &&
     !e.target.value.length == 0
   ) {
     emailErrorMsg.innerHTML = "Email incorrect ex: nom.prenom@gmail.fr";
@@ -323,37 +324,37 @@ const validationCart = document.addEventListener("submit", (e) => {
       products: orderId,
     };
     localStorage.setItem("order", JSON.stringify(dataUser));
-    // dataUser = JSON.parse(localStorage.getItem("orderId"))
-    // console.log(dataUser);
+
 
     // ------------------------envoi vers server-----------------
 
     const promise1 = fetch("http://localhost:3000/api/products/order", {
       method: "POST",
-      body: JSON.stringify(dataUser),
       headers: {
-        
+        "Accept": "application/json",
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(dataUser),
     });
+
+    
     // ------------------------réponse du server-----------------
-    promise1.then(async (response) => {
+
+
+    promise1.then(async(response) => {
       try {
         const content = await response.json();
-        console.log(content);
-        localStorage.setItem("orderId", JSON.stringify(content.orderId));
+    
+        const finalOrder = content.orderId;
+        
+        window.location = `confirmation.html?${finalOrder}`
       
-        window.location = "confirmation.html"
-      
-      } catch (e) {
-        console.log(e);
+      } catch {
+        
+        alert("Nous rencontrons un problème avec votre commande");
       }
     });
-   
-
-    // window.location = ("http://127.0.0.1:5500/P5-Dev-Web-Kanap/front/html/confirmation.html")
-
-    // alert("Commande validée");
+    
   } else {
     alert("Aucune commande validée");
   }
