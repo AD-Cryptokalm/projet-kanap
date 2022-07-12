@@ -2,6 +2,7 @@
 
 let addProduct = JSON.parse(localStorage.getItem("product"));
 
+
 const productCartDisplay = async () => {
   if (addProduct) {
     await addProduct;
@@ -99,9 +100,7 @@ const newQuantite = async (productCartDisplay) => {
           return (
             (addProduct[i].quantite = plusMoins.value),
             (addProduct[i].totalPrice = plusMoins.value * addProduct[i].price),
-            localStorage.setItem("product", JSON.stringify(addProduct)),
-            JSON.parse(localStorage.getItem("product")),
-            console.log(addProduct),
+          
             total()
           );
       }
@@ -112,13 +111,13 @@ const newQuantite = async (productCartDisplay) => {
 // -------------------------Total produit et prix total----------------------
 
 const total = () => {
-  let dataLocal = JSON.parse(localStorage.getItem("product"));
+  // let dataLocal = JSON.parse(localStorage.getItem("product"));
 
   productQuantity = [];
   productPrice = [];
 
-  if (dataLocal) {
-    dataLocal.forEach((product) => {
+  if (addProduct) {
+    addProduct.forEach((product) => {
       productQuantity.push(product.quantite);
       productPrice.push(product.totalPrice);
 
